@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -14,6 +13,7 @@ func getEvents(context *gin.Context) {
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch events. Try agasin later."})
+		return
 	}
 	context.JSON(http.StatusOK, events)
 }
@@ -39,7 +39,6 @@ func getEvent(context *gin.Context) {
 func createEvent(context *gin.Context) {
 	var event models.Event
 	error := context.ShouldBindJSON(&event)
-	fmt.Println("error", error)
 
 	if error != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request data."})
@@ -52,7 +51,6 @@ func createEvent(context *gin.Context) {
 	err := event.Save()
 
 	if err != nil {
-		fmt.Println("create event error", err)
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Could not create event. Try agasin later."})
 		return
 	}

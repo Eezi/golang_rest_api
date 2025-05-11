@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 
 	"example.com/rest-api/db"
@@ -37,7 +36,6 @@ func (event Event) Save() error {
 	}
 
 	id, err := result.LastInsertId()
-	fmt.Println("created id", id)
 	event.ID = id
 	return err
 }
@@ -56,7 +54,7 @@ func GetAllEvents() ([]Event, error) {
 
 	for rows.Next() {
 		var event Event
-		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, event.DateTime)
+		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserID)
 
 		if err != nil {
 			return nil, err
@@ -101,7 +99,7 @@ func (event Event) Update() error {
 }
 
 func (event Event) Delete() error {
-	query := "DELETE events WHERE id = ?"
+	query := "DELETE FROM events WHERE id = ?"
 	stmt, err := db.DB.Prepare(query)
 
 	if err != nil {
